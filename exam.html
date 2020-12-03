@@ -2,10 +2,103 @@
 <script src="https://d3js.org/d3.v6.min.js"></script>
 
 <div id="scatterplot-graph">
-    <div id="title"></div>
+    <div id="title">Doping in Professional Bicycle Racing</div>
     <div id="graph"></div>
 </div>
 
 <script>
+    fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json')
+        .then(response => response.json())
+        .then(data => {
+            const w = 800;
+            const h = 400;
+            const padding = 40;
 
+            const svg = d3.select('#graph')
+                .append('svg')
+                .style('width', w)
+                .style('height', h)
+
+            const tooltip = d3.select('#graph')
+                .append('div')
+                .attr('id', 'tooltip')
+                .attr('data-year', '')
+                .text('')
+                .style('opacity', 0)
+
+            const xScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.Year) - 1, d3.max(data, d => d.Year)])
+                .range([padding, w - padding]);
+            const yScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.Seconds), d3.max(data, d => d.Seconds)])
+                .range([h - padding, padding]);
+
+            const secondToMinute = s => {
+                let minute = Math.floor(s / 60);
+                let second = s - minute * 60;
+                if (second == 0) second += '0'
+                return minute + ':' + second;
+            }
+            const xAxis = d3.axisBottom(xScale);
+            const yAxis = d3.axisLeft(yScale).tickFormat(secondToMinute);
+
+
+            const circle = svg.selectAll('circle')
+                .data(data)
+                .enter()
+                .append('circle')
+                .attr('cx', d => xScale(d.Year))
+                .attr('cy', d => yScale(d.Seconds))
+                .attr('r', 5)
+                .attr('class', 'dot')
+                .attr('data-xvalue', d => d.Year)
+                .attr('data-yvalue', d => d.Seconds)
+                .attr('fill', d => {
+                    return d.Doping === '' ? 'cyan' : '#dd4814'
+                })
+                .style('stroke', 'black')
+                .on('mouseover', (even, d) => {
+                    tooltip.attr('data-year', d.Year)
+                        .html(
+                            '<strong>Name</strong>: ' + d.Name + ',<br><strong>Time</strong>: ' + d.Time + ',<br><strong>Year</strong>: ' + d.Year + ',<br><strong>Nationality</strong>: ' + d.Nationality
+                        )
+                        .style('opacity', 1)
+                        .style('transform', 'translate(' + (xScale(d.Year) - w / 2 + 100) + 'px,' + (0 - (h - yScale(d.Seconds)) + 10) + 'px)')
+                })
+                .on('mouseout', (even, d) => {
+                    tooltip.attr('data-year', '')
+                        .text('')
+                        .style('opacity', 0)
+                })
+
+            svg.append('g')
+                .attr('transform', 'translate(0,' + (h - padding) + ')')
+                .call(xAxis)
+                .attr('id', 'x-axis')
+            svg.append('g')
+                .attr('transform', 'translate(' + padding + ',0)')
+                .call(yAxis)
+                .attr('id', 'y-axis')
+
+            svg.append('rect')
+                .attr('x', 600)
+                .attr('y', 200)
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr('fill', 'cyan')
+            svg.append('text')
+                .attr('x', 625)
+                .attr('y', 215)
+                .text('No doping')
+            svg.append('rect')
+                .attr('x', 600)
+                .attr('y', 225)
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr('fill', '#dd4814')
+            svg.append('text')
+                .attr('x', 625)
+                .attr('y', 240)
+                .text('Doping')
+        })
 </script>

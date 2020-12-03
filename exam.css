@@ -1,0 +1,11 @@
+#scatterplot-graph {
+    text-align: center;
+}
+#title {
+    font-size: 30px;
+    margin: 20px 0;
+    color: #5e0080
+}
+.dot {
+    border:  1px solid;
+}
