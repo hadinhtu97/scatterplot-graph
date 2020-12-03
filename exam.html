@@ -39,7 +39,7 @@
                 if (second == 0) second += '0'
                 return minute + ':' + second;
             }
-            const xAxis = d3.axisBottom(xScale);
+            const xAxis = d3.axisBottom(xScale).tickFormat(d3.format(''));
             const yAxis = d3.axisLeft(yScale).tickFormat(secondToMinute);
 
 
