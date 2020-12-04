@@ -2,8 +2,10 @@
 <script src="https://d3js.org/d3.v6.min.js"></script>
 
 <div id="scatterplot-graph">
+    <div id="tooltip"></div>
     <div id="title">Doping in Professional Bicycle Racing</div>
     <div id="graph"></div>
+    <div id="legend"></div>
 </div>
 
 <script>
@@ -14,16 +16,13 @@
             const h = 400;
             const padding = 40;
 
-            const svg = d3.select('#graph')
+            const graph = d3.select('#graph')
                 .append('svg')
                 .style('width', w)
                 .style('height', h)
 
-            const tooltip = d3.select('#graph')
-                .append('div')
-                .attr('id', 'tooltip')
+            const tooltip = d3.select('#tooltip')
                 .attr('data-year', '')
-                .text('')
                 .style('opacity', 0)
 
             const xScale = d3.scaleLinear()
@@ -43,7 +42,7 @@
             const yAxis = d3.axisLeft(yScale).tickFormat(secondToMinute);
 
 
-            const circle = svg.selectAll('circle')
+            const circle = graph.selectAll('circle')
                 .data(data)
                 .enter()
                 .append('circle')
@@ -63,40 +62,43 @@
                             '<strong>Name</strong>: ' + d.Name + ',<br><strong>Time</strong>: ' + d.Time + ',<br><strong>Year</strong>: ' + d.Year + ',<br><strong>Nationality</strong>: ' + d.Nationality
                         )
                         .style('opacity', 1)
-                        .style('transform', 'translate(' + (xScale(d.Year) - w / 2 + 100) + 'px,' + (0 - (h - yScale(d.Seconds)) + 10) + 'px)')
+                        .style('left', (even.pageX + 20) + 'px')
+                        .style('top', even.pageY + 'px')
                 })
                 .on('mouseout', (even, d) => {
                     tooltip.attr('data-year', '')
                         .text('')
                         .style('opacity', 0)
+                        .style('left', '0px')
+                        .style('top', '0px')
                 })
 
-            svg.append('g')
+            graph.append('g')
                 .attr('transform', 'translate(0,' + (h - padding) + ')')
                 .call(xAxis)
                 .attr('id', 'x-axis')
-            svg.append('g')
+            graph.append('g')
                 .attr('transform', 'translate(' + padding + ',0)')
                 .call(yAxis)
                 .attr('id', 'y-axis')
 
-            svg.append('rect')
+            graph.append('rect')
                 .attr('x', 600)
                 .attr('y', 200)
                 .attr('width', 20)
                 .attr('height', 20)
                 .attr('fill', 'cyan')
-            svg.append('text')
+            graph.append('text')
                 .attr('x', 625)
                 .attr('y', 215)
                 .text('No doping')
-            svg.append('rect')
+            graph.append('rect')
                 .attr('x', 600)
                 .attr('y', 225)
                 .attr('width', 20)
                 .attr('height', 20)
                 .attr('fill', '#dd4814')
-            svg.append('text')
+            graph.append('text')
                 .attr('x', 625)
                 .attr('y', 240)
                 .text('Doping')

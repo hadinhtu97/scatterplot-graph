@@ -1,8 +1,23 @@
 #scatterplot-graph {
     text-align: center;
 }
+
 #title {
     font-size: 30px;
     margin: 20px 0;
+    color: #dd4814
+}
+
+#x-axis path, #x-axis line {
     color: #5e0080
+}
+
+#y-axis path, #y-axis line {
+    color: #5e0080
+}
+
+#tooltip {
+    position: absolute;
+    text-align: center;
+    background: lightsteelblue;
 }
