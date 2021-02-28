@@ -19,3 +19,6 @@ Display data as a scatter graph
 13. I can see a legend containing descriptive text that has `id="legend"`.
 14. I can mouse over an area and see a tooltip with a corresponding `id="tooltip"` which displays more information about the area.
 15. My tooltip should have a data-year property that corresponds to the data-xvalue of the active area.
+
+### Demo
+[Link Demo](https://codepen.io/hadinhtu97/full/YzGyBqw)
